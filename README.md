@@ -1,2 +1,2 @@
-# laravel-epay
-library to work with ePay payment system
+# laravel ePay API
+library to work with ePay payment system via API.
