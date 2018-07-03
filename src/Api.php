@@ -60,6 +60,44 @@ class Api
 
 
     /**
+     * pay for subscription
+     *
+     * @param array     $params     contains: [
+     *     subscriptionid   | *required long int
+     *     orderid          | *required string (max 20)
+     *     amount           | *required integer ( 123.45 => 12345 )
+     *     currency         | *required string
+     *     instantcapture   | *required Integer (1 or 0)
+     *     group            | String (max 100)
+     *     description      | String (max 1024)
+     *     email            | String (max 100)
+     *     sms              | String (max 8)
+     *     ipaddress        | String (max 15)
+     * ]
+     * @return array
+     */
+    public function authorize(array $params) : array
+    {
+        return $this->request('authorize', $params);
+    }
+
+    /**
+     * delete subscription
+     *
+     * @param string    $subscriptionid
+     * @return array
+     */
+    public function deletesubscription(string $subscriptionid) : array
+    {
+        $params = [
+            'subscriptionid' => $subscriptionid,
+        ];
+
+        return $this->request('deletesubscription', $params);
+    }
+
+
+    /**
      * send request to epay and get answer
      *
      * @param string    $method    soap method on specific url

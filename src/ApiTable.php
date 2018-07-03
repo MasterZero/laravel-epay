@@ -18,7 +18,12 @@ abstract class ApiTable
     public static function list() : array
     {
         return [
+            //payment
             'gettransaction' => 'https://ssl.ditonlinebetalingssystem.dk/remote/payment.asmx?WSDL',
+
+            // subscription
+            'authorize' => 'https://ssl.ditonlinebetalingssystem.dk/remote/subscription.asmx?WSDL',
+            'deletesubscription' => 'https://ssl.ditonlinebetalingssystem.dk/remote/subscription.asmx?WSDL',
         ];
     }
 
