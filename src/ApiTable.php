@@ -23,6 +23,7 @@ abstract class ApiTable
 
             // subscription
             'authorize' => 'https://ssl.ditonlinebetalingssystem.dk/remote/subscription.asmx?WSDL',
+            'getEpayError' => 'https://ssl.ditonlinebetalingssystem.dk/remote/subscription.asmx?WSDL',
             'deletesubscription' => 'https://ssl.ditonlinebetalingssystem.dk/remote/subscription.asmx?WSDL',
         ];
     }

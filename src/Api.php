@@ -78,6 +78,25 @@ class Api
      */
     public function authorize(array $params) : array
     {
+
+        $defaultParams = [
+            'group'         => null,
+            'description'   => null,
+            'email'         => null,
+            'sms'           => null,
+            'transactionid' => -1,
+            'pbsresponse'   => -1,
+            'fraud'         => 0,
+        ];
+
+        // if $params['paramName'] isn't set, then install default values,
+        foreach ($defaultParams as $paramName => $value) {
+
+            if (!isset($params[$paramName])) {
+                $params[$paramName] = $value;
+            }
+        }
+
         return $this->request('authorize', $params);
     }
 
@@ -94,6 +113,30 @@ class Api
         ];
 
         return $this->request('deletesubscription', $params);
+    }
+
+
+    /**
+     * get epay error at $language by $epayresponsecode code
+     *
+     * @param int    $language
+     * @param int    $epayresponsecode
+     *
+     * laguages:
+     * 1 - Danish
+     * 2 - English
+     * 3 - Swedish
+     *
+     * @return array
+     */
+    public function getEpayError(int $language, int $epayresponsecode) : array
+    {
+        $params = [
+            'language' => $language,
+            'epayresponsecode' => $epayresponsecode,
+        ];
+
+        return $this->request('getEpayError', $params);
     }
 
 
