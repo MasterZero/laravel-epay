@@ -41,6 +41,68 @@ class Api
     }
 
 
+
+    /**
+     * capture transaction
+     *
+     * @param $transactionid    | string 
+     * @param $amount           | string
+     * @param $params           | array [
+     *     'group'      => string (max 100) optional
+     *     'invoice'    => string (max 100) optional
+     * ]
+     * @return array
+     */
+    public function capture(string $transactionid, int $amount, array $params = []) : array
+    {
+        $params['transactionid'] = $transactionid;
+        $params['amount'] = $amount;
+
+        return $this->request('capture', $params);
+    }
+
+
+    /**
+     * credit transaction. return $amount of money back to the client
+     * important! Works, when capture has been called
+     *
+     * @param $transactionid    | string 
+     * @param $amount           | string
+     * @param $params           | array [
+     *     'group'      => string (max 100) optional
+     *     'invoice'    => string (max 100) optional
+     * ]
+     * @return array
+     */
+    public function credit(string $transactionid, int $amount, array $params = []) : array
+    {
+        $params['transactionid'] = $transactionid;
+        $params['amount'] = $amount;
+
+        return $this->request('credit', $params);
+    }
+
+
+    /**
+     * delete transaction. return all money back to the client
+     * important! Works, when capture has not been called
+     *
+     * @param $transactionid    | string 
+     * @param $params           | array [
+     *     'group'      => string (max 100) optional
+     * ]
+     * @return array
+     */
+    public function delete(string $transactionid, array $params = []) : array
+    {
+        $params['transactionid'] = $transactionid;
+
+        return $this->request('delete', $params);
+    }
+
+
+
+
     /**
      * pay for subscription
      *
@@ -50,11 +112,11 @@ class Api
      *     amount           | *required integer ( 123.45 => 12345 )
      *     currency         | *required string
      *     instantcapture   | *required Integer (1 or 0)
-     *     group            | String (max 100)
-     *     description      | String (max 1024)
-     *     email            | String (max 100)
-     *     sms              | String (max 8)
-     *     ipaddress        | String (max 15)
+     *     group            | String (max 100) optional
+     *     description      | String (max 1024) optional
+     *     email            | String (max 100) optional
+     *     sms              | String (max 8) optional
+     *     ipaddress        | String (max 15) optional
      * ]
      * @return array
      */

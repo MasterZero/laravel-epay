@@ -23,6 +23,25 @@ abstract class ApiTable
     {
         return [
 
+            // payment
+            'capture' => [
+                'location' => 'https://ssl.ditonlinebetalingssystem.dk/remote/payment.asmx',
+                'uri' => 'https://ssl.ditonlinebetalingssystem.dk/remote/payment',
+                'SOAPAction' => 'https://ssl.ditonlinebetalingssystem.dk/remote/payment/capture',
+            ],
+
+            'credit' => [
+                'location' => 'https://ssl.ditonlinebetalingssystem.dk/remote/payment.asmx',
+                'uri' => 'https://ssl.ditonlinebetalingssystem.dk/remote/payment',
+                'SOAPAction' => 'https://ssl.ditonlinebetalingssystem.dk/remote/payment/credit',
+            ],
+
+            'delete' => [
+                'location' => 'https://ssl.ditonlinebetalingssystem.dk/remote/payment.asmx',
+                'uri' => 'https://ssl.ditonlinebetalingssystem.dk/remote/payment',
+                'SOAPAction' => 'https://ssl.ditonlinebetalingssystem.dk/remote/payment/delete',
+            ],
+
             // subscription
             'authorize' => [
                 'location' => 'https://ssl.ditonlinebetalingssystem.dk/remote/subscription.asmx',

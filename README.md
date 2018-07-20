@@ -42,16 +42,16 @@ EPAY_PASSWORD=12345678
 
 # Usage:
 
-### get transaction info:
+### capture transaction:
 
 ```php
 use EpayApi;
 
 // ...
 
-$result = EpayApi::gettransaction('111111111');
+$result = EpayApi::capture(12345678, 10000);
 
-if ($result['gettransactionResult']) {
+if ($result['captureResult']) {
     echo "ba dum tss! the method works!";
 } else {
     echo "nope. something went wrong :C";
