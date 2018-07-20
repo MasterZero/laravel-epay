@@ -34,7 +34,7 @@ class SoapClient
      *      'sslVerify'     => bool
      * ]
      */
-    public function SoapClient(array $params)
+    public function __construct(array $params)
     {
 
 
@@ -51,14 +51,35 @@ class SoapClient
         
     }
 
-
+    /**
+     * make a soap call
+     *
+     * @param $action       | string
+     * @param $SOAPAction   | string
+     * @param $uri          | string
+     * @param $params       | array
+     * @return array
+     */
     public function call(string $action, string $SOAPAction, string $uri, array $params = []) : array
     {
 
         $content = $this->generateXml($action, $uri, $params);
         $headers = $this->headers($SOAPAction);
 
-        $this->request($this->location, static::METHOD_POST, $content, $headers);
+        $ret = $this->request($this->location, static::METHOD_POST, $content, $headers);
+
+        $body = $ret['soapBody'];
+
+        $successKey = $action . 'Response';
+        
+        if (array_key_exists($successKey, $body)) {
+            return $body[$action . 'Response'];
+        } elseif (array_key_exists('soapFault', $body)) {
+            return $body;
+        } else {
+            throw new Exception("Unknown answer", 1);
+        }
+
     }
 
     public function headers(string $SOAPAction) : array
@@ -72,10 +93,10 @@ class SoapClient
     /**
      * do request
      *
-     * @param $url | string
-     * @param $method | string
-     * @param $data | string
-     * @param $headers | array of strings
+     * @param $url      | string
+     * @param $method   | string
+     * @param $data     | string
+     * @param $headers  | array of strings
      * @return array
      */
     protected function request(string $url, string $method = 'GET', string $data = '', array $headers = []) : array
@@ -107,6 +128,14 @@ class SoapClient
     }
 
 
+    /**
+     * generate soap body
+     *
+     * @param $action   | string
+     * @param $uri      | string
+     * @param $params   | array
+     * @return array
+     */
     protected function generateXml(string $action, string $uri, array $params) : string
     {
         $strParams = $this->arrayToXmlstring($params);
@@ -116,7 +145,7 @@ class SoapClient
         '<soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">'.
             '<soap:Body>'.
                 '<' . $action . ' xmlns="' . $uri . '">'.
-                    $strParams
+                    $strParams.
                 '</'. $action .'>'.
             '</soap:Body>'.
         '</soap:Envelope>';
@@ -131,6 +160,7 @@ class SoapClient
      */
     protected function stringToXmlArray(string $str) : array
     {
+        $str = preg_replace("/(<\/?)(\w+):([^>]*>)/", "$1$2$3", $str);
         return json_decode(json_encode(simplexml_load_string($str)),1);
     }
 

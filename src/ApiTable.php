@@ -37,9 +37,18 @@ abstract class ApiTable
                 'SOAPAction' => 'https://ssl.ditonlinebetalingssystem.dk/remote/subscription/deletesubscription',
             ],
 
-            /**
-             * @todo methods 'gettransaction' and 'getEpayError' temporary removed. Add it again
-             */
+
+            'getPbsError' => [
+                'location' => 'https://ssl.ditonlinebetalingssystem.dk/remote/subscription.asmx',
+                'uri' => 'https://ssl.ditonlinebetalingssystem.dk/remote/subscription',
+                'SOAPAction' => 'https://ssl.ditonlinebetalingssystem.dk/remote/subscription/getPbsError',
+            ],
+
+            'getEpayError' => [
+                'location' => 'https://ssl.ditonlinebetalingssystem.dk/remote/subscription.asmx',
+                'uri' => 'https://ssl.ditonlinebetalingssystem.dk/remote/subscription',
+                'SOAPAction' => 'https://ssl.ditonlinebetalingssystem.dk/remote/subscription/getEpayError',
+            ],
 
         ];
     }

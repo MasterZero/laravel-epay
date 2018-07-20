@@ -2,8 +2,6 @@
 namespace MasterZero\Epay;
 
 
-use SoapClient;
-
 /**
  * class MasterZero\Epay\Api
  */
@@ -40,22 +38,6 @@ class Api
     {
         $this->merchantnumber = $params['merchantnumber'] ?? config("epay.merchantnumber");
         $this->password = $params['password'] ?? config("epay.password");
-    }
-
-
-    /**
-     * get transaction info
-     *
-     * @param string    $transactionid
-     * @return array
-     */
-    public function gettransaction(string $transactionid) : array
-    {
-        $params = [
-            'transactionid' => $transactionid,
-        ];
-
-        return $this->request('gettransaction', $params);
     }
 
 
@@ -118,6 +100,31 @@ class Api
         ];
 
         return $this->request('getEpayError', $params);
+    }
+
+
+
+    /**
+     * get pbs error at $language by $pbsresponsecode code
+     *
+     * @param int    $language
+     * @param int    $pbsresponsecode
+     *
+     * laguages:
+     * 1 - Danish
+     * 2 - English
+     * 3 - Swedish
+     *
+     * @return array
+     */
+    public function getPbsError(int $language, int $pbsresponsecode) : array
+    {
+        $params = [
+            'language' => $language,
+            'pbsresponsecode' => $pbsresponsecode,
+        ];
+
+        return $this->request('getPbsError', $params);
     }
 
 
