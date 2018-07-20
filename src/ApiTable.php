@@ -10,21 +10,37 @@ abstract class ApiTable
 {
 
     /**
-     * table with method and url in format:
-     * 'methodName' => 'https://here.method.can/be/called.asmx?WSDL'
+     * table with method and urls in format:
+     * 'methodName' => [
+     *      'location' => 'https://here.method.can/be/called.asmx',
+     *      'uri' => 'https://here.method.can/be/called,'
+     *      'SOAPAction' => 'https://here.placed/the/method',
+     * ]
      *
      * @return array
      */
     public static function list() : array
     {
         return [
-            //payment
-            'gettransaction' => 'https://ssl.ditonlinebetalingssystem.dk/remote/payment.asmx?WSDL',
 
             // subscription
-            'authorize' => 'https://ssl.ditonlinebetalingssystem.dk/remote/subscription.asmx?WSDL',
-            'getEpayError' => 'https://ssl.ditonlinebetalingssystem.dk/remote/subscription.asmx?WSDL',
-            'deletesubscription' => 'https://ssl.ditonlinebetalingssystem.dk/remote/subscription.asmx?WSDL',
+            'authorize' => [
+                'location' => 'https://ssl.ditonlinebetalingssystem.dk/remote/subscription.asmx',
+                'uri' => 'https://ssl.ditonlinebetalingssystem.dk/remote/subscription',
+                'SOAPAction' => 'https://ssl.ditonlinebetalingssystem.dk/remote/subscription/authorize',
+            ],
+
+
+            'deletesubscription' => [
+                'location' => 'https://ssl.ditonlinebetalingssystem.dk/remote/subscription.asmx',
+                'uri' => 'https://ssl.ditonlinebetalingssystem.dk/remote/subscription',
+                'SOAPAction' => 'https://ssl.ditonlinebetalingssystem.dk/remote/subscription/deletesubscription',
+            ],
+
+            /**
+             * @todo methods 'gettransaction' and 'getEpayError' temporary removed. Add it again
+             */
+
         ];
     }
 
@@ -32,9 +48,9 @@ abstract class ApiTable
      * get url by methodName
      *
      * @param string    $methodName
-     * @return string
+     * @return array
      */
-    public static function url(string $methodName) : string
+    public static function url(string $methodName) : array
     {
         $table = static::list();
 

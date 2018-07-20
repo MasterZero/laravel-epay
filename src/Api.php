@@ -78,25 +78,6 @@ class Api
      */
     public function authorize(array $params) : array
     {
-
-        $defaultParams = [
-            'group'         => null,
-            'description'   => null,
-            'email'         => null,
-            'sms'           => null,
-            'transactionid' => -1,
-            'pbsresponse'   => -1,
-            'fraud'         => 0,
-        ];
-
-        // if $params['paramName'] isn't set, then install default values,
-        foreach ($defaultParams as $paramName => $value) {
-
-            if (!isset($params[$paramName])) {
-                $params[$paramName] = $value;
-            }
-        }
-
         return $this->request('authorize', $params);
     }
 
@@ -150,13 +131,15 @@ class Api
     protected function request(string $method, array $params) : array
     {
         $params = array_merge($this->defaultParams(), $params);
-        $url = ApiTable::url($method);
+        $urls = ApiTable::url($method);
 
-        $client = new SoapClient($url);
-        $answer = $client->$method($params);
+        $clientParams = [
+            'location' => $urls['location'],
+        ];
 
-        // stdClass -> array
-        $ret = json_decode(json_encode($answer),1);
+        $client = new SoapClient($clientParams);
+
+        $ret = $client->call($method, $urls['SOAPAction'], $urls['uri'], $params);
 
         return $ret;
     }
@@ -171,7 +154,6 @@ class Api
         return [
             'merchantnumber' => $this->merchantnumber,
             'pwd' => $this->password,
-            'epayresponse' => '-1',
         ];
     }
 
