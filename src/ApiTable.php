@@ -10,85 +10,96 @@ abstract class ApiTable
 {
 
     /**
-     * table with method and urls in format:
-     * 'methodName' => [
-     *      'location' => 'https://here.method.can/be/called.asmx',
-     *      'uri' => 'https://here.method.can/be/called,'
-     *      'SOAPAction' => 'https://here.placed/the/method',
+     * get url by methodName
+     *
+     * @param string    $methodName
+     * @return array [
+     *      'location',
+     *      'uri',
+     *      'SOAPAction',
+      * ]
+     */
+    public static function url(string $methodName) : array
+    {
+
+        $endpointName = static::getEndpoint($methodName);
+        $endpointTable = static::endpoints();
+        $uri = $endpointTable[$endpointName];
+
+        $ret = [
+            'location' => $uri . '.asmx',
+            'uri' => $uri,
+            'SOAPAction' => $uri . '/' . $methodName,
+        ];
+
+        return $ret;
+    }
+
+
+    /**
+     * @return endpoint list in format array [
+     * 'methodName' => 'uri',
      * ]
+     */
+    protected static function endpoints() : array
+    {
+        return [
+            'payment' => 'https://ssl.ditonlinebetalingssystem.dk/remote/payment',
+            'subscription' => 'https://ssl.ditonlinebetalingssystem.dk/remote/subscription',
+        ];
+    }
+
+
+    /**
+     * table with method and urls in format:
+     * 'endpointName' => '[
+          *      'method1',
+          *      'method2',
+          *      'method3',
+          * ]'
      *
      * @return array
      */
-    public static function list() : array
+    protected static function list() : array
     {
         return [
 
-            // payment
-            'capture' => [
-                'location' => 'https://ssl.ditonlinebetalingssystem.dk/remote/payment.asmx',
-                'uri' => 'https://ssl.ditonlinebetalingssystem.dk/remote/payment',
-                'SOAPAction' => 'https://ssl.ditonlinebetalingssystem.dk/remote/payment/capture',
+            'payment' => [
+                'capture',
+                'credit',
+                'delete',
             ],
 
-            'credit' => [
-                'location' => 'https://ssl.ditonlinebetalingssystem.dk/remote/payment.asmx',
-                'uri' => 'https://ssl.ditonlinebetalingssystem.dk/remote/payment',
-                'SOAPAction' => 'https://ssl.ditonlinebetalingssystem.dk/remote/payment/credit',
+            'subscription' => [
+                'authorize',
+                'deletesubscription',
+                'getPbsError',
+                'getEpayError',
             ],
-
-            'delete' => [
-                'location' => 'https://ssl.ditonlinebetalingssystem.dk/remote/payment.asmx',
-                'uri' => 'https://ssl.ditonlinebetalingssystem.dk/remote/payment',
-                'SOAPAction' => 'https://ssl.ditonlinebetalingssystem.dk/remote/payment/delete',
-            ],
-
-            // subscription
-            'authorize' => [
-                'location' => 'https://ssl.ditonlinebetalingssystem.dk/remote/subscription.asmx',
-                'uri' => 'https://ssl.ditonlinebetalingssystem.dk/remote/subscription',
-                'SOAPAction' => 'https://ssl.ditonlinebetalingssystem.dk/remote/subscription/authorize',
-            ],
-
-
-            'deletesubscription' => [
-                'location' => 'https://ssl.ditonlinebetalingssystem.dk/remote/subscription.asmx',
-                'uri' => 'https://ssl.ditonlinebetalingssystem.dk/remote/subscription',
-                'SOAPAction' => 'https://ssl.ditonlinebetalingssystem.dk/remote/subscription/deletesubscription',
-            ],
-
-
-            'getPbsError' => [
-                'location' => 'https://ssl.ditonlinebetalingssystem.dk/remote/subscription.asmx',
-                'uri' => 'https://ssl.ditonlinebetalingssystem.dk/remote/subscription',
-                'SOAPAction' => 'https://ssl.ditonlinebetalingssystem.dk/remote/subscription/getPbsError',
-            ],
-
-            'getEpayError' => [
-                'location' => 'https://ssl.ditonlinebetalingssystem.dk/remote/subscription.asmx',
-                'uri' => 'https://ssl.ditonlinebetalingssystem.dk/remote/subscription',
-                'SOAPAction' => 'https://ssl.ditonlinebetalingssystem.dk/remote/subscription/getEpayError',
-            ],
-
         ];
     }
 
     /**
-     * get url by methodName
+     * get endpoint name by method name
      *
-     * @param string    $methodName
-     * @return array
+     * @param $methodName | string
+     * @return string
+     * ]
      */
-    public static function url(string $methodName) : array
+    protected static function getEndpoint(string $methodName) : string
     {
         $table = static::list();
 
-        if(!isset($table[$methodName])) {
-            throw new Exception("Epay\ApiTable doesn't contains method '$methodName'", 1);
-
+        foreach ($table as $endpoint => $methodList) {
+            if (array_key_exists($methodName, $methodList)) {
+                return $endpoint;
+            }
         }
 
-        return $table[$methodName];
+        throw new Exception("Method '$methodName' doesn't exists in ApiTable", 1);
     }
+
+    
 
 }
 
