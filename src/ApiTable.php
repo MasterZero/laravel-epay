@@ -91,7 +91,7 @@ abstract class ApiTable
         $table = static::list();
 
         foreach ($table as $endpoint => $methodList) {
-            if (array_key_exists($methodName, $methodList)) {
+            if (in_array($methodName, $methodList)) {
                 return $endpoint;
             }
         }
