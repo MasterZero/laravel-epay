@@ -117,7 +117,7 @@ class SoapClient
         $responseData = curl_exec($ch);
 
         if(curl_errno($ch)) {
-            throw new CurlException('[SoapClient] ' . curl_error($ch), 1);
+            throw new Exception('[SoapClient] ' . curl_error($ch), 1);
         }
 
         $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
